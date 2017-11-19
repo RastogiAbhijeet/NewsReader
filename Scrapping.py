@@ -6,23 +6,24 @@ import newspaper
 from textblob import TextBlob
 from datetime import date
 import json
-from summerProject.databaseHandling import InterfaceClass
+from databaseHandling import InterfaceClass
 
 
 class ScrapNews(object):
+    
     def __init__(self):
         self.listTitleLink = []
         self.obj = InterfaceClass()
         self.listTitleLink = self.obj.validation()
         self.url = request.urlopen("https://news.google.com/news/?ned=us&hl=en")
+
     def fetchLinks(self):
-
         soup = BeautifulSoup(self.url,'html.parser')
-
         for link in soup.find_all("a"):
             x = str(link.get('href'))
+            # print(x)
             if x[0] == 'h' or x[0] == '/':
-                 if '/news' in x and '/topic' in x and '/section' in x:
+                 if '/section' in x:
                     print(x)
 
     def fetch_news(self):
@@ -39,26 +40,29 @@ class ScrapNews(object):
         # link is an iterable for all the links present on the main Link
         for link in soup.find_all("a"):
             linkLayer_1 = str(link.get('href'))
-            if linkLayer_1[0] == '/':
-                if '/news' in linkLayer_1 and '/topic' in linkLayer_1 and '/section' in linkLayer_1:
-                    linkLayer_1 = 'https://news.google.com/news/?ned=us&hl=en'+ linkLayer_1
+            if linkLayer_1[0] == 'h':
+                # if '/news' in linkLayer_1 and '/topic' in linkLayer_1 and '/section' in linkLayer_1:
+                if '/section' in linkLayer_1:
+                    linkLayer_1 = 'https://news.google.com/news/' + linkLayer_1
                     if ('topic/BUSINESS' in linkLayer_1 or 'topic/NATION' in linkLayer_1 or 'topic/WORLD' in linkLayer_1 or 'topic/TECHNOLOGY' in linkLayer_1) and linkLayer_1 not in linkAppend:
                         print(linkLayer_1)
-                        linkAppend.append(linkLayer_1)
-                        urlLinkLayer_1 = request.urlopen(linkLayer_1)
-                        soupLayer_1 = BeautifulSoup(urlLinkLayer_1,'html.parser')
-                        count = 0
-
-                        for targetLink in soupLayer_1.find_all('a'):
-                            if count < 20:
-                                tempLink = str(targetLink.get('href'))
-                                if ("google" not in tempLink and 'youtube' not in tempLink and tempLink[0] == 'h' ) and tempLink not in listAppendNews :
-                                    count+=1
-                                    listAppendNews.append(tempLink)
-                                    print(tempLink)
-                                    self.process_item(tempLink)
-                            # print()
-                            # print()
+                        try:
+                            urlLinkLayer_1 = request.urlopen(linkLayer_1)
+                            soupLayer_1 = BeautifulSoup(urlLinkLayer_1,'html.parser')
+                            count = 0
+                            linkAppend.append(linkLayer_1)
+                            for targetLink in soupLayer_1.find_all('a'):
+                                if count < 20:
+                                    tempLink = str(targetLink.get('href'))
+                                    # print(tempLink)
+                                    if (tempLink[0] == 'h' and ('google' not in tempLink) and ('youtube' not in tempLink) and ('headlines/section/topic/' not in tempLink)) and tempLink not in listAppendNews :
+                                        # print("Hello")
+                                        print(tempLink)
+                                        count+=1
+                                        listAppendNews.append(tempLink)
+                                        self.process_item(tempLink)
+                        except :
+                            pass         
 
     def process_item(self,url_link):
         # obj = InterfaceClass()
@@ -88,11 +92,16 @@ class ScrapNews(object):
         classificationValue = None#blob.classify()
         return sentVal, classificationValue
 
-# listTitleLink = obj.validation()
-# print(listTitleLink)
-# fetch_news()
-
-# fetchLinks()
-
 scrapObj = ScrapNews()
 scrapObj.fetch_news()
+
+
+'''
+    Program Control
+
+    1. Fetch News()
+    2. ProcessItem()
+    3. SentiValue()
+'''
+
+

@@ -35,8 +35,6 @@ class Loader(object):
 
         self.MainWindow.show()
 
-
-
 app = QApplication(sys.argv)
 obj = Loader()
 

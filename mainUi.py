@@ -7,8 +7,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from summerProject.databaseHandling import InterfaceClass
-from summerProject.webcam.webcam import Webcam
+from databaseHandling import InterfaceClass
+# from webcam.webcam import Webcam
 import sys
 
 class Ui_MainWindow(object):
@@ -35,7 +35,7 @@ class Ui_MainWindow(object):
         font.setPointSize(16)
         self.label.setFont(font)
         self.label.setStyleSheet("background-color: rgb(0, 0, 0,100);\n"
-"color: rgb(255, 255, 255);")
+    "color: rgb(255, 255, 255);")
         self.label.setFrameShape(QtWidgets.QFrame.Panel)
         self.label.setFrameShadow(QtWidgets.QFrame.Plain)
         self.label.setLineWidth(0)
@@ -215,6 +215,12 @@ class Ui_MainWindow(object):
         self.display_news(self.counterForNews)
         pass
 
-obj = Webcam()
-print(obj.startModel())
+# print(obj.startModel())
 
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())

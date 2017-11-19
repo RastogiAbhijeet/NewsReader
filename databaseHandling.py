@@ -26,7 +26,6 @@ class InterfaceClass(object):
         self.collection = self.dbObj.NewsData
         print("Connected to database")
 
-
     def insertData(self, jsObj):
         # print(jsObj)
         try:
@@ -35,7 +34,6 @@ class InterfaceClass(object):
                 print("data added")
         except Exception:
             print("Could not insert Data")
-
     # a method from the gui class will call this function in order the fetch the news from the data with the required sentiment value
     def fetchData(self):
         try:
@@ -44,7 +42,7 @@ class InterfaceClass(object):
             return data
         except Exception:
             pass
-
+            
     def validation(self):
         try:
             # print("hello")

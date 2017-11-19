@@ -4,10 +4,14 @@ sys.path.append("../")
 import cv2
 import numpy as np
 
-from summerProject.webcam import face_detection_utilities as fdu
-
-import summerProject.model.myVGG as vgg
+# from summerProject.webcam import face_detection_utilities as fdu
+import face_detection_utilities as fdu
+os.environ["THEANO_FLAGS"] = "mode=FAST_RUN,device=gpu,floatX=float32"
+import model.myVGG as vgg
+# import summerProject.model.myVGG as vgg
 import time
+import keras 
+import theano
 
 class Webcam:
 	def __init__(self,duration = 10):
@@ -79,9 +83,9 @@ class Webcam:
 			self.averageEmotion = 5
 		return (self.emotion[avgEmotion], avgEmotion)
 
-# obj = Webcam()
-# t0 = time.time()
-# print(obj.startModel())
-# t1 = time.time()
+obj = Webcam()
+t0 = time.time()
+print(obj.startModel())
+t1 = time.time()
 #
 # print(t1-t0)
