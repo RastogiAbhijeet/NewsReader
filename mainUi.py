@@ -8,8 +8,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from databaseHandling import InterfaceClass
-# from webcam.webcam import Webcam
+from webcam.webcam import Webcam
 import sys
+import time
 
 class Ui_MainWindow(object):
 
@@ -66,9 +67,16 @@ class Ui_MainWindow(object):
         self.tableEmoValue.verticalHeader().setHighlightSections(True)
         self.tableEmoValue.verticalHeader().setSortIndicatorShown(False)
         self.tableEmoValue.verticalHeader().setStretchLastSection(False)
-        self.videoWidget = QtWidgets.QWidget(self.centralwidget)
+
+        self.videoWidget = QtWidgets.QLabel(self.centralwidget)
         self.videoWidget.setGeometry(QtCore.QRect(20, 70, 281, 251))
         self.videoWidget.setObjectName("videoWidget")
+        self.videoWidget.setStyleSheet("color: rgb(255, 255, 255);\n"
+"background-color: rgba(0, 0, 0, 100);\n"
+"font: 75 13pt \"Myanmar Text\";\n"
+"")
+
+
         self.startTraining = QtWidgets.QPushButton(self.centralwidget)
         self.startTraining.setGeometry(QtCore.QRect(20, 10, 131, 31))
         self.startTraining.setStyleSheet("color: rgb(255, 255, 255);\n"
@@ -190,10 +198,28 @@ class Ui_MainWindow(object):
         self.label_4.setText(_translate("MainWindow", "Press the button after training"))
 
     def fetch_news(self):
+        obj = Webcam()
+        t0 = time.time()
+
+        l, avgeEmotion, m, emo = obj.startModel()
+        t1 = time.time()
+        print(t1-t0)
         temp_dict = self.databaseObj.fetchData()
         for document in temp_dict:
             self.fetchDataList.append(document)
+
         self.display_news(0)
+        self.videoWidget.setText(str(l))
+        # print(m)
+        print(emo)
+        self.tableEmoValue.setRowCount(len(m)+1)
+        # print(len(m))
+        print(emo)
+        for i in range(len(m)):
+            print(i)
+            self.tableEmoValue.setItem(i,0 ,QtWidgets.QTableWidgetItem(str(m[i])))
+            self.tableEmoValue.setItem(i,1 ,QtWidgets.QTableWidgetItem(str(emo[m[i]])))
+
 
     def display_news(self,index):
         self.articleText.setText(self.fetchDataList[index]["NewsData"])
@@ -214,8 +240,6 @@ class Ui_MainWindow(object):
             self.counterForNews = len(self.fetchDataList)-1
         self.display_news(self.counterForNews)
         pass
-
-# print(obj.startModel())
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

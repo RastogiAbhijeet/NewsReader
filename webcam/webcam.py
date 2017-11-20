@@ -4,9 +4,9 @@ sys.path.append("../")
 import cv2
 import numpy as np
 
-# from summerProject.webcam import face_detection_utilities as fdu
-import face_detection_utilities as fdu
-os.environ["THEANO_FLAGS"] = "mode=FAST_RUN,device=gpu,floatX=float32"
+from summerProject.webcam import face_detection_utilities as fdu
+# import face_detection_utilities as fdu
+# os.environ["THEANO_FLAGS"] = "mode=FAST_RUN,device=gpu,floatX=float32"
 import model.myVGG as vgg
 # import summerProject.model.myVGG as vgg
 import time
@@ -74,6 +74,7 @@ class Webcam:
 			cv2.setWindowProperty(self.windowsName, cv2.WND_PROP_FULLSCREEN, cv2.WND_PROP_FULLSCREEN)
 		emotionList = []
 		t_end = time.time() + self.captureDuration
+		
 
 		print("Detecting expression..")
 		while time.time() < t_end:
@@ -81,11 +82,8 @@ class Webcam:
 			emotionList = self.cleanList(emotionList, None)
 			avgEmotion = self.averageEmotion = self.averageListElements(emotionList)
 			self.averageEmotion = 5
-		return (self.emotion[avgEmotion], avgEmotion)
+		
+		cv2.destroyAllWindows()
+		return (self.emotion[avgEmotion], avgEmotion,emotionList, self.emotion)
+		
 
-obj = Webcam()
-t0 = time.time()
-print(obj.startModel())
-t1 = time.time()
-#
-# print(t1-t0)
